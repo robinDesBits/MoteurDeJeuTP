@@ -61,17 +61,17 @@ void GameWindow:: ChargerMap(QString localPath)
     {
         for(int j = 0; j < m_image.height()*3; j+=3)
         {
-            id = i*m_image.width() +j;
+            id = j*m_image.width() +i;
             pixel = m_image.pixel(i/3,j/3);
             points[id]= (float)i/(m_image.width()) - ((float)m_image.width()/2.0)/m_image.width()-1;
             points[id+1] = (float)j/(m_image.height()) - ((float)m_image.height()/2.0)/m_image.height();
             points[id+2] = 0.001f * (float)(qRed(pixel));
             couleurs[id]=1.0f;
-            couleurs[id+1]=1.0f;
-            couleurs[id+2]=1.0f;
+            couleurs[id+1]=0.0f;
+            couleurs[id+2]=0.0f;
         }
     }
-   /* vertices= new GLfloat[m_image.width()*m_image.height()*3+6*m_image.height()];
+   vertices= new GLfloat[m_image.width()*m_image.height()*3+6*m_image.height()];
 
     int i=0;
     int j=0;
@@ -81,21 +81,21 @@ void GameWindow:: ChargerMap(QString localPath)
         {
              if((i/2)%3==0)
              {
-               vertices[j*m_image.width()+i]=points[i/2+j*largeur];
-               vertices[j*m_image.width()+i+1]=points[(i/2+1)+j*largeur];
-               vertices[j*m_image.width()+i+2]=points[i/2+2+j*largeur];
+               vertices[j*2*m_image.width()+i]=points[i/2+j*largeur];
+               vertices[j*2*m_image.width()+i+1]=points[(i/2+1)+j*largeur];
+               vertices[j*2*m_image.width()+i+2]=points[i/2+2+j*largeur];
              }
              else
              {
-                 vertices[j*m_image.width()+i]=points[i-(2*(i-2)/4)+j*(largeur*2-3)+j*largeur];
-                 vertices[j*m_image.width()+i+1]=points[i-(2*(i-2)/4)+j*(largeur*2-3)+1+j*largeur];
-                 vertices[j*m_image.width()+i+2]=points[i-(2*(i-2)/4)+j*(largeur*2-3)+2+j*largeur];
+                 vertices[j*2*m_image.width()+i]=points[(i/3/2)*3+j*largeur+(j+1)*largeur];
+                 vertices[j*2*m_image.width()+i+1]=points[(i/3/2)*3+j*largeur+(j+1)*largeur+1];
+                 vertices[j*2*m_image.width()+i+2]=points[(i/3/2)*3+j*largeur+(j+1)*largeur+2];
              }
-             couleurs[j*m_image.width()+i]=1.0f;
-             couleurs[j*m_image.width()+i+1]=0.0f;
-             couleurs[j*m_image.width()+i+2]=0.0f;
+             /*couleurs[j*2*m_image.width()+i]=1.0f;
+             couleurs[j*2*m_image.width()+i+1]=0.0f;
+             couleurs[j*2*m_image.width()+i+2]=0.0f;*/
          }
-    }*/
+    }
 }
 
 void GameWindow::render()
@@ -108,7 +108,7 @@ void GameWindow::render()
     m_program->bind();
 
     QMatrix4x4 matrix;
-    matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
+    matrix.perspective(80.0f, 4.0f/3.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, avancerZ);
     matrix.rotate(rotX, 1, 0, 0);
     matrix.rotate(rotY, 0, 1, 0);
@@ -129,7 +129,7 @@ void GameWindow::render()
          glEnableVertexAttribArray(0);
          glEnableVertexAttribArray(1);
 
-         glDrawArrays(GL_TRIANGLE_STRIP, 0, largeur*hauteur-6);
+         glDrawArrays(GL_POINTS, 0, largeur*hauteur);
 
          glDisableVertexAttribArray(1);
          glDisableVertexAttribArray(0);
