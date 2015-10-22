@@ -4,7 +4,6 @@ GameWindow::GameWindow()
     : m_program(0)
     , m_frame(0)
 {
-    ChargerMap();
 
 }
 
@@ -39,6 +38,7 @@ void GameWindow::initialize()
     m_posAttr = m_program->attributeLocation("posAttr");
     m_colAttr = m_program->attributeLocation("colAttr");
     m_matrixUniform = m_program->uniformLocation("matrix");
+    ChargerMap("./heightmap-1.png");
 
    // glMatrixMode(GL_MODELVIEW);
 }
@@ -51,23 +51,30 @@ void GameWindow:: ChargerMap(QString localPath)
        m_image = QImage(localPath);
     }
     QRgb pixel;
-
+    hauteur=m_image.height();
+    largeur=m_image.width();
+    int id;
+    points=new GLfloat[m_image.width()*m_image.height()*3];
     //Creation des Points
-    for(int i=0;i<172800;i+=3)
-    {
-      pixel = m_image.pixel(i,j);
+    couleurs= new GLfloat [hauteur*largeur*3];
 
-      points[i]=((i/3%240)-50)*0.02f-0.5f;
-      points[i+1]=((i/720))*(-0.01f)+1;
-      if(i%240==0 || i<720 || i>172080 || i/3%240==239)
-      {
-        points[i+2]=0;
-      }
-      else
-      {
-        points[i+2]= rand()/(float)RAND_MAX * (0.1f);
-      }
+    for(int i = 0; i < m_image.width()*3; i+=3)
+    {
+        for(int j = 0; j < m_image.height()*3; j+=3)
+        {
+            id = i*m_image.width() +j;
+            pixel = m_image.pixel(i/3,j/3);
+            points[id]= (float)i/(m_image.width()) - ((float)m_image.width()/2.0)/m_image.width()-1;
+            points[id+1] = (float)j/(m_image.height()) - ((float)m_image.height()/2.0)/m_image.height();
+            points[id+2] = 0.001f * (float)(qRed(pixel));
+
+
+        }
     }
+    couleurs[i]=1.0f;
+        couleurs[i+1]=0.0f;
+        couleurs[i+2]=0.0f;
+
 }
 
 void GameWindow::render()
@@ -90,18 +97,10 @@ void GameWindow::render()
 
     m_program->setUniformValue(m_matrixUniform, matrix);
 
-    //creation des couleurs
-    GLfloat colors[172800];
-    for(int i=0;i<768;i+=3)
-    {
-        colors[i]=1.0f;
-        colors[i+1]=0.0f;
-        colors[i+2]=0.0f;
-    }
 
 
     //Affichage des points
-    GLfloat vertices[1440];
+     vertices= new GLfloat[1440];
     int i=0;
     for(int j=0;j<239;j++)
     {
@@ -123,7 +122,7 @@ void GameWindow::render()
          glPolygonMode(GL_FRONT_AND_BACK,  GL_LINE);
 
          glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-         glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, colors);
+         glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, couleurs);
 
          glEnableVertexAttribArray(0);
          glEnableVertexAttribArray(1);
@@ -134,6 +133,7 @@ void GameWindow::render()
          glDisableVertexAttribArray(0);
          //glDisableVertexAttribArray(0);
     }
+
     ++m_frame;
 }
 

@@ -10,14 +10,7 @@
 #include <QKeyEvent>
 #include <QtCore/qmath.h>
 
-struct Point
-{
-    float x, y ,z;
-};
-struct Couleur
-{
-    float r, g ,b;
-};
+
 class GameWindow : public OpenGLWindow
 {
 public:
@@ -40,16 +33,16 @@ private:
     QOpenGLShaderProgram *m_program;
     int m_frame;
 
-    Point *points;
-    Couleur *couleurs;
-    Point *vertices;
+    GLfloat *points;
+    GLfloat *couleurs;
+    GLfloat *vertices;
 
     int rotX=-45;
     int rotY= 0;
     int rotZ= 0;
     int largeur;
     int hauteur;
-    float deplacerX=1.3;
+    float deplacerX=0;
     float avancerZ=-3;
     float scale=0;
 };
