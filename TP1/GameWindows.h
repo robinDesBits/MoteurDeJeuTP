@@ -42,8 +42,8 @@ private:
     int rotZ= 0;
     int largeur;
     int hauteur;
-    float deplacerX=0;
-    float avancerZ=-3;
+    float deplacerX=-1;
+    float avancerZ=0;
     float scale=0;
 };
 
