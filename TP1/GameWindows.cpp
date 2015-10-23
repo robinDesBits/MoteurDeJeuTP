@@ -54,9 +54,9 @@ void GameWindow:: ChargerMap(QString localPath)
     largeur=m_image.width();
     int id;
     points=new GLfloat[m_image.width()*m_image.height()*3];
-    //Creation des Points
-    couleurs= new GLfloat[m_image.width()*m_image.height()*3+6*m_image.height()];
 
+    vertices= new GLfloat[m_image.width()*6];
+    couleurs= new GLfloat[m_image.width()*6];
     for(int i = 0; i < m_image.width()*3; i+=3)
     {
         for(int j = 0; j < m_image.height()*3; j+=3)
@@ -66,36 +66,9 @@ void GameWindow:: ChargerMap(QString localPath)
             points[id]= (float)i/(m_image.width()) - ((float)m_image.width()/2.0)/m_image.width()-1;
             points[id+1] = (float)j/(m_image.height()) - ((float)m_image.height()/2.0)/m_image.height();
             points[id+2] = 0.001f * (float)(qRed(pixel));
-            couleurs[id]=1.0f;
-            couleurs[id+1]=0.0f;
-            couleurs[id+2]=0.0f;
         }
     }
-   vertices= new GLfloat[m_image.width()*m_image.height()*3+6*m_image.height()];
 
-    int i=0;
-    int j=0;
-    for(j = 0; j <  m_image.height(); j++)
-    {
-        for(i = 0; i < m_image.width()*6; i+=3)
-        {
-             if((i/2)%3==0)
-             {
-               vertices[j*2*m_image.width()+i]=points[i/2+j*largeur];
-               vertices[j*2*m_image.width()+i+1]=points[(i/2+1)+j*largeur];
-               vertices[j*2*m_image.width()+i+2]=points[i/2+2+j*largeur];
-             }
-             else
-             {
-                 vertices[j*2*m_image.width()+i]=points[(i/3/2)*3+j*largeur+(j+1)*largeur];
-                 vertices[j*2*m_image.width()+i+1]=points[(i/3/2)*3+j*largeur+(j+1)*largeur+1];
-                 vertices[j*2*m_image.width()+i+2]=points[(i/3/2)*3+j*largeur+(j+1)*largeur+2];
-             }
-             couleurs[j*6*m_image.width()+i]=1.0f;
-             couleurs[j*6*m_image.width()+i+1]=0.0f;
-             couleurs[j*6*m_image.width()+i+2]=0.0f;
-         }
-    }
 }
 
 void GameWindow::render()
@@ -118,21 +91,62 @@ void GameWindow::render()
 
     m_program->setUniformValue(m_matrixUniform, matrix);
 
+     int i=0;
+     int j=0;
+     glPolygonMode(GL_FRONT_AND_BACK,  GL_LINE);
 
-    //Affichage des points
+    for(int j=0; j<m_image.height()-1;j++)
+    {
+         for(i = 0; i < m_image.width()*6; i+=3)
+         {
+              if((i/2)%3==0)
+              {
+                vertices[i]=points[(i/3/2)*3+j*largeur*3];
+                vertices[i+1]=points[(i/3/2)*3+j*largeur*3+1];
+                vertices[i+2]=points[(i/3/2)*3+j*largeur*3+2];
+              }
+              else
+              {
+                  vertices[i]=points[(i/3/2)*3+j*largeur*3+largeur*3];
+                  vertices[i+1]=points[(i/3/2)*3+j*largeur*3+largeur*3+1];
+                  vertices[i+2]=points[(i/3/2)*3+j*largeur*3+largeur*3+2];
+              }
+              if(vertices[i+2] >=0.15)
+              {
+                  couleurs[i]=1.0f;
+                  couleurs[i+1]=1.0f;
+                  couleurs[i+2]=1.0f;
+              }
+              else if(vertices[i+2] >=0.04)
+              {
+                  couleurs[i]=0.5f;
+                  couleurs[i+1]=0.2f;
+                  couleurs[i+2]=0.2f;
+              }
+              else
+              {
+                  couleurs[i]=0.5f;
+                  couleurs[i+1]=0.5f;
+                  couleurs[i+2]=0.0f;
+              }
 
-         glPolygonMode(GL_FRONT_AND_BACK,  GL_LINE);
-
+          }
          glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices);
          glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, couleurs);
 
          glEnableVertexAttribArray(0);
          glEnableVertexAttribArray(1);
 
-         glDrawArrays(GL_POINTS, 0, largeur*hauteur);
+         glDrawArrays(GL_TRIANGLE_STRIP, 0, largeur*2);
 
          glDisableVertexAttribArray(1);
          glDisableVertexAttribArray(0);
+     }
+
+    //Affichage des points
+
+
+
 
 
     ++m_frame;

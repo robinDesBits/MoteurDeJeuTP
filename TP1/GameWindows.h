@@ -43,7 +43,7 @@ private:
     int largeur;
     int hauteur;
     float deplacerX=-1;
-    float avancerZ=-3;
+    float avancerZ=-2;
     float scale=0;
 };
 
