@@ -91,9 +91,9 @@ void GameWindow:: ChargerMap(QString localPath)
                  vertices[j*2*m_image.width()+i+1]=points[(i/3/2)*3+j*largeur+(j+1)*largeur+1];
                  vertices[j*2*m_image.width()+i+2]=points[(i/3/2)*3+j*largeur+(j+1)*largeur+2];
              }
-             /*couleurs[j*2*m_image.width()+i]=1.0f;
-             couleurs[j*2*m_image.width()+i+1]=0.0f;
-             couleurs[j*2*m_image.width()+i+2]=0.0f;*/
+             couleurs[j*6*m_image.width()+i]=1.0f;
+             couleurs[j*6*m_image.width()+i+1]=0.0f;
+             couleurs[j*6*m_image.width()+i+2]=0.0f;
          }
     }
 }
@@ -123,7 +123,7 @@ void GameWindow::render()
 
          glPolygonMode(GL_FRONT_AND_BACK,  GL_LINE);
 
-         glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, points);
+         glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices);
          glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, couleurs);
 
          glEnableVertexAttribArray(0);
