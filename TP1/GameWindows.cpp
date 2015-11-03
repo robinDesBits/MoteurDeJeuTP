@@ -65,7 +65,7 @@ void GameWindow:: ChargerMap(QString localPath)
             pixel = m_image.pixel(i/3,j/3);
             points[id]= (float)i/(m_image.width()) - ((float)m_image.width()/2.0)/m_image.width()-1;
             points[id+1] = (float)j/(m_image.height()) - ((float)m_image.height()/2.0)/m_image.height();
-            points[id+2] = 0.001f * (float)(qRed(pixel));
+            points[id+2] = 0.002f * (float)(qRed(pixel));
         }
     }
 
@@ -93,7 +93,6 @@ void GameWindow::render()
 
      int i=0;
      int j=0;
-     glPolygonMode(GL_FRONT_AND_BACK,  GL_LINE);
 
     for(int j=0; j<m_image.height()-1;j++)
     {
@@ -111,13 +110,13 @@ void GameWindow::render()
                   vertices[i+1]=points[(i/3/2)*3+j*largeur*3+largeur*3+1];
                   vertices[i+2]=points[(i/3/2)*3+j*largeur*3+largeur*3+2];
               }
-              if(vertices[i+2] >=0.15)
+              if(vertices[i+2] >=0.3)
               {
                   couleurs[i]=1.0f;
                   couleurs[i+1]=1.0f;
                   couleurs[i+2]=1.0f;
               }
-              else if(vertices[i+2] >=0.04)
+              else if(vertices[i+2] >=0.08)
               {
                   couleurs[i]=0.5f;
                   couleurs[i+1]=0.2f;

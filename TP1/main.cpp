@@ -56,8 +56,29 @@ int main(int argc, char **argv)
 
     GameWindow window;
     window.setFormat(format);
-    window.resize(640, 480);
+    window.resize(480, 300);
+    window.setPosition(120, 10);
     window.show();
+    GameWindow window2;
+    window2.setFormat(format);
+    window2.resize(480, 300);
+    window2.setPosition(640, 10);
+    window2.show();
+
+    GameWindow window3;
+    window3.setFormat(format);
+    window3.resize(480, 300);
+    window3.setPosition(640, 400);
+
+    window3.show();
+
+    GameWindow window4;
+    window4.setFormat(format);
+    window4.resize(480, 300);
+    window4.setPosition(120, 400);
+
+    window4.show();
+
 
     //window.setAnimating(true);
 
